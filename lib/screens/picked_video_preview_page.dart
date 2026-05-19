@@ -133,9 +133,8 @@ class _PickedVideoPreviewPageState extends State<PickedVideoPreviewPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) => LoadingPage(
-                                      sourceLabel: widget.sourceLabel,
-                                      videoPath: widget.videoPath,
-                                    ),
+  videoPath: widget.videoPath,
+),
                                   ),
                                 );
                               },

@@ -548,50 +548,50 @@ packages:
     dependency: "direct main"
     description:
       name: serious_python
-      sha256: "8c8b157ac706a52744ecc24c88d5a6c492a7a3c46a237004be5981a65c40b43c"
+      sha256: "1aa65b753682b29bbf2af5ba6aa14c04d7c53c0bc5f559a7b4c730961b9ba800"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.12"
+    version: "1.0.0"
   serious_python_android:
     dependency: transitive
     description:
       name: serious_python_android
-      sha256: "9f9a1142dad2c5d707f8d11d88c41c4f81b2eef8dd091709da77cb03954c2040"
+      sha256: "342bfaa3fe0c588fdeec657afc2ae0e2cb5e1cab72d40dc0ff2b86c8c55f6a00"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.12"
+    version: "1.0.0"
   serious_python_darwin:
     dependency: transitive
     description:
       name: serious_python_darwin
-      sha256: "97cb59fde6d588fcf183d4bdf2561a2238f8a1cfdcd139b793569f421f27db2d"
+      sha256: "9e29f78d742787a2f67cee759e7e3e64c933c34fef205d7330f2917230e974c3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.12"
+    version: "1.0.0"
   serious_python_linux:
     dependency: transitive
     description:
       name: serious_python_linux
-      sha256: bdf92c9b674ab15c21df3f4768db85f4f83975ebb32a9a79c831f4a5317ed6d0
+      sha256: "9d23f8e94a4510616a285c6a0f74a20952ee4015434fa4a0ee852b2ed83bd1ea"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.12"
+    version: "1.0.0"
   serious_python_platform_interface:
     dependency: transitive
     description:
       name: serious_python_platform_interface
-      sha256: "711ab864411dad7937d724938688bfb3cad97e6ad2a3849a0d84ba43dd96ca03"
+      sha256: b017ac9b3d0216343ea9762d6fa744676a787c30dcf92ee1fb7b14bb7be04d86
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.12"
+    version: "1.0.0"
   serious_python_windows:
     dependency: transitive
     description:
       name: serious_python_windows
-      sha256: a84301f113337d72ada8a0f6b5858b966e7b2b14e939c24953c9f79bac5afbcc
+      sha256: "93137de1610983e6654d5ab91c84f96a26d9f10b9c8e56d6b796def61d4e0372"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.12"
+    version: "1.0.0"
   shelf:
     dependency: transitive
     description:
