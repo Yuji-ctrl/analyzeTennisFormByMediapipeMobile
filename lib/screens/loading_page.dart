@@ -1,19 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-
-import '../models/analysis_result.dart';
+import '../services/python_boot_service.dart';
+import '../services/analysis_api_service.dart';
 import 'result_page.dart';
 
 class LoadingPage extends StatefulWidget {
-  const LoadingPage({
-    super.key,
-    required this.sourceLabel,
-    this.videoPath,
-  });
-
-  final String sourceLabel;
-  final String? videoPath;
+  const LoadingPage({super.key});
 
   @override
   State<LoadingPage> createState() => _LoadingPageState();
@@ -23,54 +14,48 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    _mockAnalyze();
+    _runCheck();
   }
 
-  Future<void> _mockAnalyze() async {
-    await Future.delayed(const Duration(seconds: 3));
-    if (!mounted) return;
+  Future<void> _runCheck() async {
+    try {
+      await PythonBootService.ensureStarted();
 
-    final result = AnalysisResult(
-      sourceLabel: widget.sourceLabel,
-      similarityPercent: 82 + Random().nextInt(14),
-      videoPath: widget.videoPath,
-    );
+      await Future.delayed(const Duration(seconds: 2));
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ResultPage(result: result),
-      ),
-    );
+      final health = await AnalysisApiService.healthCheck();
+      final echo = await AnalysisApiService.echo("hello from flutter");
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ResultPage(
+            resultText:
+                'health: ${health['message']}\necho: ${echo['echo']}\nsource: ${echo['source']}',
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ResultPage(
+            resultText: 'Python API connection failed\n$e',
+          ),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              CircularProgressIndicator(strokeWidth: 6),
-              SizedBox(height: 24),
-              Text(
-                '分析中...',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'MediaPipeで骨格動作を解析しています',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18),
-              ),
-            ],
-          ),
-        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }
