@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import 'routes.dart';
 import 'screens/home_page.dart';
 
 class FormAnalysisApp extends StatelessWidget {
@@ -19,10 +18,6 @@ class FormAnalysisApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: HomePage(cameras: cameras),
-      routes: {
-        AppRoutes.loading: (context) => const SizedBox.shrink(),
-        AppRoutes.result: (context) => const SizedBox.shrink(),
-      },
     );
   }
 }
