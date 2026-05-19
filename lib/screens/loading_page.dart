@@ -1,9 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:serious_python/serious_python.dart';
-import 'package:http/http.dart' as http;
+import 'dart:math';
+import 'package:flutter/material.dart';
+
 import '../models/analysis_result.dart';
+import '../services/python_boot_service.dart';
+import '../services/analysis_api_service.dart';
 import 'result_page.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -22,23 +23,23 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    _mockAnalyze();
-  }
+    _runCheck();
+  }Future<void> _runCheck() async {
+  try {
+    await PythonBootService.ensureStarted();
 
-  Future<void> _mockAnalyze() async {
-    try{}
-    await SeriousPython.run("app/app.zip");
-    await Future.delayed(const Duration(seconds: 3));
-    final healthUri = Uri.parse('http://127.0.0.1:8000/health');
-      final response = await http.get(healthUri);
+    await Future.delayed(const Duration(seconds: 2));
+
+    final health = await AnalysisApiService.healthCheck();
+    final echo = await AnalysisApiService.echo("hello from flutter");
+
     if (!mounted) return;
 
-if (response.statusCode == 200) {
     final result = AnalysisResult(
-  sourceLabel: 'video',
-  similarityPercent: 82 + Random().nextInt(14),
-  videoPath: widget.videoPath,
-);
+      sourceLabel: 'video',
+      similarityPercent: 82 + Random().nextInt(14),
+      videoPath: widget.videoPath,
+    );
 
     Navigator.pushReplacement(
       context,
@@ -46,51 +47,29 @@ if (response.statusCode == 200) {
         builder: (_) => ResultPage(result: result),
       ),
     );
-  }else{
-    _showError('Python API returned ${response.statusCode}');
-  }catch(e){if (!mounted) return;
-      _showError('Python起動または接続確認に失敗しました: $e');
-    }
+  } catch (e) {
+    if (!mounted) return;
+    _showError('Python起動または接続確認に失敗しました: $e');
   }
+}
 
-  void _showError(String message) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => Scaffold(
-          appBar: AppBar(title: const Text('エラー')),
-          body: Center(child: Text(message)),
-        ),),
-    );
-  }
+void _showError(String message) {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (_) => Scaffold(
+        appBar: AppBar(title: const Text('エラー')),
+        body: Center(child: Text(message)),
+      ),
+    ),
+  );
+ }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              CircularProgressIndicator(strokeWidth: 6),
-              SizedBox(height: 24),
-              Text(
-                '分析中...',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'MediaPipeで骨格動作を解析しています',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18),
-              ),
-            ],
-          ),
-        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }
