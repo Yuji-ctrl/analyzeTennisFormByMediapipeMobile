@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import 'loading_page.dart';
+import 'picked_video_preview_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key, required this.cameras});
@@ -80,7 +80,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     if (controller == null || !_isRecording) return;
 
     try {
-      await controller.stopVideoRecording();
+      final XFile file = await controller.stopVideoRecording();
 
       if (!mounted) return;
 
@@ -91,7 +91,8 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const LoadingPage(
+          builder: (_) => PickedVideoPreviewPage(
+            videoPath: file.path,
             sourceLabel: '撮影動画',
           ),
         ),

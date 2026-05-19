@@ -1,16 +1,65 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'camera_page.dart';
-import 'loading_page.dart';
+import 'picked_video_preview_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.cameras});
 
   final List<CameraDescription> cameras;
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ImagePicker _picker = ImagePicker();
+  bool _isPicking = false;
+
+  Future<void> _pickVideo() async {
+    if (_isPicking) return;
+
+    setState(() {
+      _isPicking = true;
+    });
+
+    try {
+      final XFile? pickedVideo = await _picker.pickVideo(
+        source: ImageSource.gallery,
+      );
+
+      if (!mounted) return;
+
+      if (pickedVideo != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PickedVideoPreviewPage(
+              videoPath: pickedVideo.path,
+              sourceLabel: 'アップロード動画',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('動画の選択に失敗しました: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPicking = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final cameras = widget.cameras;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -50,18 +99,11 @@ class HomePage extends StatelessWidget {
                     const SizedBox(width: 20),
                     Expanded(
                       child: _HomeActionButton(
-                        icon: Icons.upload_file_rounded,
-                        label: 'アップロード',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoadingPage(
-                                sourceLabel: 'アップロード動画',
-                              ),
-                            ),
-                          );
-                        },
+                        icon: _isPicking
+                            ? Icons.hourglass_top_rounded
+                            : Icons.upload_file_rounded,
+                        label: _isPicking ? '読込中...' : 'アップロード',
+                        onTap: _isPicking ? null : _pickVideo,
                       ),
                     ),
                   ],
@@ -84,7 +126,7 @@ class _HomeActionButton extends StatelessWidget {
 
   final IconData icon;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

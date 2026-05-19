@@ -6,9 +6,14 @@ import '../models/analysis_result.dart';
 import 'result_page.dart';
 
 class LoadingPage extends StatefulWidget {
-  const LoadingPage({super.key, required this.sourceLabel});
+  const LoadingPage({
+    super.key,
+    required this.sourceLabel,
+    this.videoPath,
+  });
 
   final String sourceLabel;
+  final String? videoPath;
 
   @override
   State<LoadingPage> createState() => _LoadingPageState();
@@ -28,6 +33,7 @@ class _LoadingPageState extends State<LoadingPage> {
     final result = AnalysisResult(
       sourceLabel: widget.sourceLabel,
       similarityPercent: 82 + Random().nextInt(14),
+      videoPath: widget.videoPath,
     );
 
     Navigator.pushReplacement(
