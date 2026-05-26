@@ -1,3 +1,17 @@
+import sys
+print("python started")
+print(sys.path)
+
+try:
+    import fastapi
+    import uvicorn
+    import pydantic
+    print("imports ok")
+except Exception as e:
+    print("import error:", repr(e))
+    raise
+# ここまでテスト
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
@@ -24,6 +38,6 @@ def echo(body: EchoRequest):
     }
 
 if __name__ == "__main__":
-    # uvicorn.run(app, host="127.0.0.1", port=8000)
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
+    # uvicorn.run(app, host="0.0.0.0", port=8000)
     # uvicorn.run(app, host="10.0.2.2", port=8000)
